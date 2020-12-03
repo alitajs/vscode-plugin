@@ -1,0 +1,44 @@
+@itemWidth :187px;
+
+.center {
+  .flexItem {
+    width: @itemWidth;
+    margin: auto;
+  }
+
+  .description {
+    margin: 12px;
+    color: #b2b2b2;
+    width: @itemWidth;
+    font-size: 24px;
+  }
+
+  .imgPanel {
+    width: @itemWidth;
+    height: 333px;
+    overflow: hidden;
+
+    img {
+      width: @itemWidth;
+      height: auto;
+    }
+  }
+
+  .tplType {
+
+    :global {
+      .am-accordion-header {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .tplSubType {
+
+    :global {
+      .am-accordion-header {
+        font-size: 26px;
+      }
+    }
+  }
+}
