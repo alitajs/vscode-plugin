@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Accordion, Modal, Flex } from 'antd-mobile';
 // @ts-ignore
 import { useRequest } from 'alita';
+import vscode from '@/utils/vscode';
 import { query } from './service';
 
 import styles from './index.less';
@@ -24,8 +25,7 @@ const AbcPage: FC<PageProps> = () => {
               { text: '取消' },
               {
                 text: '提交', onPress: text => {
-                  const vscode = (window as any).acquireVsCodeApi();
-                  vscode.postMessage({ type: 'templatesSelected', value: item.key });
+                  vscode.postMessage({ type: 'templatesSelected', value: item, routerName: text, });
                 }
               },
             ],
