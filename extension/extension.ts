@@ -49,7 +49,7 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
           downloadPackage(data.value.path, targetDir).catch((e) => {
             vscode.window.showErrorMessage(`下载失败`);
           });
-					openTemplateDoc(data.value.name);
+					openTemplateDoc(data.value.path);
           break;
         }
       }

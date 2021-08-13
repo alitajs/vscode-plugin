@@ -24,11 +24,11 @@ function getWebviewHtml(templateName: string) {
     <title>${templateName}文档</title>
   </head>
   <body>
-    <div  style="min-width: 1320px; overflow-x:auto; height: 100vh">
+    <div  style="min-width: 1320px; overflow-x:auto; padding: 20px">
       <iframe
-      src="https://bing.com"
+      src="https://templates.alitajs.com/#/${templateName}"
       frameborder="0"
-      style="width: 100%; height: 100%"
+      style="width: 375px; height: 667px"
     ></iframe>
     </div>
   </body>
