@@ -2,10 +2,15 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { downloadPackage } from './downloadUtil';
+import registerCommands from './registerCommand';
+import { openTemplateDoc } from './webview/templateDoc';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+
+	registerCommands(context);
+
   const provider = new TemplatesViewProvider(context.extensionUri);
 
   context.subscriptions.push(
@@ -44,6 +49,7 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
           downloadPackage(data.value.path, targetDir).catch((e) => {
             vscode.window.showErrorMessage(`下载失败`);
           });
+					openTemplateDoc(data.value.name);
           break;
         }
       }
