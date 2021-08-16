@@ -8,8 +8,7 @@ import { openTemplateDoc } from './webview/templateDoc';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
-	registerCommands(context);
+  registerCommands(context);
 
   const provider = new TemplatesViewProvider(context.extensionUri);
 
@@ -43,13 +42,16 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage((data) => {
       switch (data.type) {
-        case 'templatesSelected': {
+        case 'templateSelected': {
           // vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`#${data.value}`));
-					const targetDir = data.routerName;
+          openTemplateDoc(data.value.path);
+          break;
+        }
+        case 'templateDownload': {
+          const targetDir = data.routerName;
           downloadPackage(data.value.path, targetDir).catch((e) => {
             vscode.window.showErrorMessage(`下载失败`);
           });
-					openTemplateDoc(data.value.path);
           break;
         }
       }

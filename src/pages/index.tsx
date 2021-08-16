@@ -7,12 +7,19 @@ import { query } from './service';
 
 import styles from './index.less';
 
-interface PageProps { }
+interface PageProps {}
 
 const AbcPage: FC<PageProps> = () => {
   const { data } = useRequest(query);
 
   const onItemCLick = (item: any) => {
+    vscode.postMessage({
+      type: 'templateSelected',
+      value: item,
+    });
+  };
+
+  const onDownloadCLick = (item: any) => {
     Modal.alert('确认', `将<${item.title || item.description}>添加到项目中`, [
       { text: '取消', onPress: () => console.log('cancel') },
       {
@@ -24,40 +31,69 @@ const AbcPage: FC<PageProps> = () => {
             [
               { text: '取消' },
               {
-                text: '提交', onPress: text => {
-                  vscode.postMessage({ type: 'templatesSelected', value: item, routerName: text, });
-                }
+                text: '提交',
+                onPress: (text) => {
+                  vscode.postMessage({
+                    type: 'templateDownload',
+                    value: item,
+                    routerName: text,
+                  });
+                },
               },
             ],
-            'default',
-          )
+            'default'
+          );
         },
       },
-    ])
-
-  }
+    ]);
+  };
+  
   const renderList = (listData: any) => {
     if (!listData) return <></>;
-    return (<Accordion defaultActiveKey="0" className={styles.tplType} >
-      {Object.keys(listData).map(item => <Accordion.Panel header={item} >
-        <Accordion defaultActiveKey="0" accordion className={styles.tplSubType}>
-          {Object.keys(listData[item]).map(subItem => <Accordion.Panel header={subItem}>
-            <Flex direction="row" wrap="wrap" justify="start" align="center">
-              {listData[item][subItem].map((i: any) => <div className={styles.flexItem} onClick={() => onItemCLick(i)}><p className={styles.description}>{i.description}</p><div className={styles.imgPanel}><img src={i.img} /></div></div>
-              )}
-            </Flex>
-          </Accordion.Panel>)}
-        </Accordion>
-      </Accordion.Panel>)
-      }
-    </Accordion>)
-
-  }
-  return (
-    <div className={styles.center}>
-      {data && renderList(data)}
-    </div>
-  );
+    return (
+      <Accordion defaultActiveKey="0" className={styles.tplType}>
+        {Object.keys(listData).map((item) => (
+          <Accordion.Panel header={item}>
+            <Accordion
+              defaultActiveKey="0"
+              accordion
+              className={styles.tplSubType}
+            >
+              {Object.keys(listData[item]).map((subItem) => (
+                <Accordion.Panel header={subItem}>
+                  <Flex
+                    direction="row"
+                    wrap="wrap"
+                    justify="start"
+                    align="center"
+                  >
+                    {listData[item][subItem].map((i: any) => (
+                      <div
+                        className={styles.flexItem}
+                        onClick={() => onItemCLick(i)}
+                      >
+                        <p className={styles.description}>{i.description}</p>
+                        <div className={styles.imgPanel}>
+                          <img src={i.img} />
+                          <button
+                            className={styles.downloadBtn}
+                            onClick={() => onDownloadCLick(i)}
+                          >
+                            下载
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </Flex>
+                </Accordion.Panel>
+              ))}
+            </Accordion>
+          </Accordion.Panel>
+        ))}
+      </Accordion>
+    );
+  };
+  return <div className={styles.center}>{data && renderList(data)}</div>;
 };
 
 export default AbcPage;
