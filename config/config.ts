@@ -1,9 +1,10 @@
 import { defineConfig } from 'alita';
 
 export default defineConfig({
-  appType: 'h5',
+  // appType: 'pc',
+  hd: false,
   hash: false,
   // request: {
   //   dataField: 'list',
   // },
-})
+});
