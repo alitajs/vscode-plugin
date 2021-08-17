@@ -38,14 +38,14 @@ const TemplateList: FC<PageProps> = ({
                       >
                         {data[item][subItem].map((tpl: any) => {
                           return (
-                            <div
-                              className={styles.flexItem}
-                              onClick={(tpl) => onItemClick?.(tpl)}
-                            >
+                            <div className={styles.flexItem} key={tpl?.key}>
                               <p className={styles.description}>
                                 {tpl.description}
                               </p>
-                              <div className={styles.imgPanel}>
+                              <div
+                                className={styles.imgPanel}
+                                onClick={() => onItemClick?.(tpl)}
+                              >
                                 <img src={tpl.img} />
                                 <button
                                   className={styles.downloadBtn}

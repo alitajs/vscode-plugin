@@ -72,7 +72,7 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
     const nonce = getNonce();
 
     return `<!DOCTYPE html>
-		<html style="font-size: 50px;">
+		<html>
 			<head>
 				<meta charset="utf-8" />
 				<meta
@@ -91,18 +91,6 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
 					#root {
 						width: 100%;
 					}
-					#root > div {
-						/* Status bar height on iOS 11.0 */
-						padding-top: constant(safe-area-inset-top);
-						padding-bottom: constant(safe-area-inset-bottom);
-						/* Status bar height on iOS 11+ */
-						padding-top: calc(env(safe-area-inset-top) * 2);
-						padding-bottom: calc(env(safe-area-inset-bottom) * 2);
-					}
-		
-					.alita-layout-head {
-						top: calc(env(safe-area-inset-top) * 2) !important;
-					}
 					body {
 						-webkit-touch-callout: none;
 						-webkit-user-select: none;
@@ -111,6 +99,7 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
 						-ms-user-select: none;
 						user-select: none;
 						-webkit-overflow-scrolling: touch;
+						padding: 0 0;
 					}
 					input {
 						border: none;
