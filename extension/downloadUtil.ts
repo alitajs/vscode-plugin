@@ -1,36 +1,66 @@
 import axios from 'axios';
 import * as vscode from 'vscode';
-import { getDirFileList, getPackageFileList } from './githubApi';
+import { BLOCK_DATA } from '../shared/constants';
+import * as GithubApi from './githubApi';
 
-export async function downloadGithubFileItem(
-  prefix: string,
-  { type, download_url, path },
-  targetDir,
-) {
-  if (type === 'file') {
-    const result = await axios.get(download_url, { method: 'GET' });
-    const targetPath = path.slice(prefix.length);
-    console.log(
-      'vscode.workspace.workspaceFile',
-      vscode.workspace.workspaceFolders[0].uri
-    );
-    const targetUri = vscode.Uri.joinPath(
-      vscode.workspace.workspaceFolders[0].uri,
-      targetDir,
-      targetPath
-    );
-    vscode.workspace.fs.writeFile(targetUri, Buffer.from(result.data, 'utf-8'));
-  } else if (type === 'dir') {
-    const fileList = await getDirFileList(path);
-    fileList.forEach((fileItem) => {
-      downloadGithubFileItem(prefix, fileItem, targetDir);
-    });
-  }
+function getBlockData() {
+  return BLOCK_DATA;
 }
 
-export async function downloadPackage(packageName: string, targetDir) {
-  const fileList = await getPackageFileList(packageName);
+export async function downloadGithubFileItem(
+  srcRoot: string,
+  { download_url, path },
+  targetDir
+) {
+  const result = await axios.get(download_url, { method: 'GET' });
+  const targetPath = path.slice(srcRoot.length);
+  const targetUri = vscode.Uri.joinPath(
+    vscode.workspace.workspaceFolders[0].uri,
+    targetDir,
+    targetPath
+  );
+  vscode.workspace.fs.writeFile(targetUri, Buffer.from(result.data, 'utf-8'));
+}
+
+export async function downloadGithubDir({
+  repoOrg,
+  repoName,
+  dir,
+  targetDir,
+  srcRoot,
+}) {
+  const fileList = await GithubApi.getDirFileList({ repoOrg, repoName, dir });
   fileList.forEach((fileItem) => {
-    downloadGithubFileItem(`${packageName}/src/pages`, fileItem, targetDir);
+    if (fileItem.type === 'file') {
+      downloadGithubFileItem(srcRoot, fileItem, targetDir);
+    } else if (fileItem.type === 'dir') {
+      downloadGithubDir({
+        repoOrg,
+        repoName,
+        dir: fileItem.path,
+        targetDir,
+        srcRoot,
+      });
+    }
+  });
+}
+
+export async function downloadPackage(
+  blockKey: string,
+  pkgItem: any,
+  targetDir
+) {
+  const blockInfo = getBlockData().find((item) => item.key === blockKey);
+  if (!blockInfo) {
+    return;
+  }
+  const { path } = pkgItem;
+  const srcRoot = `${path}/src/pages`;
+  downloadGithubDir({
+    repoOrg: blockInfo.repoOrg,
+    repoName: blockInfo.repoName,
+    dir: srcRoot,
+    targetDir,
+    srcRoot,
   });
 }

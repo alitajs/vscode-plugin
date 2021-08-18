@@ -48,8 +48,9 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
           break;
         }
         case 'templateDownload': {
-          const targetDir = data.routerName;
-          downloadPackage(data.value.path, targetDir).catch((e) => {
+					const { blockKey, pkgItem, routerName } = data;
+          const targetDir = routerName;
+          downloadPackage(blockKey, pkgItem, targetDir).catch((e) => {
             vscode.window.showErrorMessage(`下载失败`);
           });
           break;

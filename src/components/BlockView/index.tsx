@@ -6,24 +6,12 @@ import { useRequest } from 'alita';
 import TemplateList from '@/components/TemplateList';
 import { queryAlipayTpl } from '@/services/tplService';
 import vscode from '@/utils/vscode';
+import { BLOCK_BUILD_IN_KEY, BLOCK_DATA } from '../../../shared/constants';
 
-const BLOCK_SIDER_MENU_DATA = [
-  {
-    title: '支付宝',
-    key: 'alipay',
-  },
-  {
-    title: '火麒麟政企',
-    key: 'kirin',
-  },
-  {
-    title: '智慧装维',
-    key: 'smartInstallAndMaintain',
-  },
-];
+const BLOCK_SIDER_MENU_DATA = BLOCK_DATA;
 
 const apiLookup = {
-  alipay: queryAlipayTpl,
+  [BLOCK_BUILD_IN_KEY]: queryAlipayTpl,
   kirin: () => new Promise((resolve) => resolve({})),
   smartInstallAndMaintain: () => new Promise((resolve) => resolve({})),
 };
@@ -68,7 +56,8 @@ const BlockView = () => {
                 onPress: (text) => {
                   vscode?.postMessage?.({
                     type: 'templateDownload',
-                    value: item,
+                    blockKey: currentSiderMenu,
+                    pkgItem: item,
                     routerName: text,
                   });
                 },
