@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as vscode from 'vscode';
-import { BLOCK_DATA } from '../shared/constants';
+import { BLOCK_BUILD_IN_KEY, BLOCK_DATA } from '../shared/constants';
 import * as GithubApi from './githubApi';
 
 function getBlockData() {
@@ -54,13 +54,20 @@ export async function downloadPackage(
   if (!blockInfo) {
     return;
   }
-  const { path } = pkgItem;
-  const srcRoot = `${path}/src/pages`;
-  downloadGithubDir({
-    repoOrg: blockInfo.repoOrg,
-    repoName: blockInfo.repoName,
-    dir: srcRoot,
-    targetDir,
-    srcRoot,
-  });
+  switch (blockKey) {
+    case BLOCK_BUILD_IN_KEY: {
+      const { path } = pkgItem;
+      const srcRoot = `${path}/src/pages`;
+      downloadGithubDir({
+        repoOrg: blockInfo.repoOrg,
+        repoName: blockInfo.repoName,
+        dir: srcRoot,
+        targetDir,
+        srcRoot,
+      });
+      break;
+    }
+    default:
+      break;
+  }
 }

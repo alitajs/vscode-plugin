@@ -3,6 +3,7 @@ import { Layout, Menu } from 'antd';
 // @ts-ignore
 import { useRequest } from 'alita';
 import BlockView from '@/components/BlockView';
+import ComponentView from '@/components/ComponentView';
 
 const MENU_DATA = [
   {
@@ -23,7 +24,7 @@ const IndexPage: FC<PageProps> = () => {
   const handleMenuClick = (info: any) => {
     setCurrentMenu(info.key);
   };
-  
+
   return (
     <Layout>
       <Layout.Header style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -38,6 +39,7 @@ const IndexPage: FC<PageProps> = () => {
         </Menu>
       </Layout.Header>
       {currentMenu === 'block' && <BlockView />}
+      {currentMenu === 'component' && <ComponentView />}
     </Layout>
   );
 };

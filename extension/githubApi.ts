@@ -9,7 +9,3 @@ export async function getDirFileList({ repoOrg, repoName, dir }) {
   const result = await axios(url, { method: 'get' });
   return result.data;
 }
-
-export function getPackageFileList({ repoOrg, repoName, dir }) {
-  return getDirFileList({ repoOrg, repoName, dir });
-}

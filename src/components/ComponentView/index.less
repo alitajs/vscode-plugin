@@ -1,0 +1,44 @@
+@itemWidth: 121px;
+
+.componentsList {
+  .flexItem {
+    width: @itemWidth;
+    margin: auto;
+  }
+
+  .description {
+    margin: 6px;
+    color: #b2b2b2;
+    width: @itemWidth;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .imgPanel {
+    width: @itemWidth;
+    height: 215px;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      width: @itemWidth;
+      height: auto;
+    }
+
+    .downloadBtn {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 5px 10px;
+      background-color: transparent;
+      border-width: 0;
+      font-size: 12px;
+      color: #1890ff;
+    }
+
+    &:hover .downloadBtn {
+      display: block;
+    }
+  }
+}
