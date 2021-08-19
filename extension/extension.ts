@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import { downloadPackage } from './downloadUtil';
 import registerCommands from './registerCommand';
+import { openComponentDoc } from './webview/componentDoc';
 import { openTemplateDoc } from './webview/templateDoc';
 
 // this method is called when your extension is activated
@@ -48,11 +49,15 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
           break;
         }
         case 'templateDownload': {
-					const { blockKey, pkgItem, routerName } = data;
+          const { blockKey, pkgItem, routerName } = data;
           const targetDir = routerName;
           downloadPackage(blockKey, pkgItem, targetDir).catch((e) => {
             vscode.window.showErrorMessage(`下载失败`);
           });
+          break;
+        }
+        case 'componentSelected': {
+					openComponentDoc(data.component);
           break;
         }
       }

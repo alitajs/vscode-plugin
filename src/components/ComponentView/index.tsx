@@ -3,6 +3,7 @@ import { Layout, Menu } from 'antd';
 // @ts-ignore
 import { useRequest } from 'alita';
 import { getAntdMobilePlusRoutes } from '@/services/tplService';
+import vscode from '@/utils/vscode';
 import styles from './index.less';
 
 const ComponentView = () => {
@@ -37,6 +38,14 @@ const ComponentView = () => {
   const handleSiderMenuClick = (info: any) => {
     setCurrentSiderMenu(info.key);
   };
+
+  const handleComponentClick = (component: any) => {
+    vscode?.postMessage?.({
+      type: 'componentSelected',
+      component,
+    });
+  };
+
   return (
     <Layout>
       <Layout.Sider width={112}>
@@ -65,7 +74,10 @@ const ComponentView = () => {
               return (
                 <div className={styles.flexItem} key={item.path}>
                   <p className={styles.description}>{item.title}</p>
-                  <div className={styles.imgPanel} onClick={() => {}}>
+                  <div
+                    className={styles.imgPanel}
+                    onClick={() => handleComponentClick(item)}
+                  >
                     <img
                       src={`https://raw.githubusercontent.com/alitajs/antd-mobile-plus/master/screenshot/${item.meta?.componentName?.toLocaleLowerCase?.()}-demo.png?raw=true`}
                     />
