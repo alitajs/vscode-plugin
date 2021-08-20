@@ -1,4 +1,4 @@
-import { BridgeEvent, CALLBACK_HANDLER_NAME, HandlerType } from "./shared";
+import { BridgeEvent, CALLBACK_HANDLER_NAME, HandlerType } from './shared';
 
 let vscode: any;
 if (!vscode) {
@@ -18,7 +18,7 @@ class Bridge {
     vscode?.postMessage(message);
   }
 
-  sendResponseToExtension(callbackId: number, response: any) {
+  sendResponseToExtension(callbackId: number | undefined, response: any) {
     this.sendMessageToExtension({
       handlerName: CALLBACK_HANDLER_NAME,
       data: response,
@@ -30,7 +30,10 @@ class Bridge {
     window.addEventListener('message', (event) => {
       const message: BridgeEvent = event.data;
       if (message.handlerName === CALLBACK_HANDLER_NAME) {
-        this.handleReceiveExtensionCallback({ callbackId: message.callbackId, data: message.data });
+        this.handleReceiveExtensionCallback({
+          callbackId: message.callbackId,
+          data: message.data,
+        });
         return;
       }
       const fn = this.handlers.get(message.handlerName);
@@ -61,11 +64,18 @@ class Bridge {
     });
   }
 
-  handleReceiveExtensionCallback({ callbackId, data }) {
-    const fn = this.callbacks.get(callbackId);
+  callHandlerNoCallback(handlerName: string, data: any) {
+    this.sendMessageToExtension({
+      handlerName,
+      data,
+    });
+  }
+
+  handleReceiveExtensionCallback({ callbackId, data }: Partial<BridgeEvent>) {
+    const fn = this.callbacks.get(callbackId!);
     if (typeof fn === 'function' && !!fn) {
       fn(data);
-      this.callbacks.delete(callbackId);
+      this.callbacks.delete(callbackId!);
     }
   }
 }

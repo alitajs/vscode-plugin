@@ -5,8 +5,8 @@ import { Modal } from 'antd-mobile';
 import { useRequest } from 'alita';
 import TemplateList from '@/components/TemplateList';
 import { queryAlipayTpl } from '@/services/tplService';
-import vscode from '@/utils/vscode';
 import { BLOCK_BUILD_IN_KEY, BLOCK_DATA } from '../../../shared/constants';
+import vscBridge from '../../../third-party/vscode-bridge/bridge-webview';
 
 const BLOCK_SIDER_MENU_DATA = BLOCK_DATA;
 
@@ -34,10 +34,7 @@ const BlockView = () => {
   };
 
   const onItemCLick = (item: any) => {
-    vscode?.postMessage?.({
-      type: 'templateSelected',
-      value: item,
-    });
+    vscBridge.callHandlerNoCallback('templateSelected', { tpl: item });
   };
 
   const onDownloadCLick = (item: any) => {
@@ -54,8 +51,7 @@ const BlockView = () => {
               {
                 text: '提交',
                 onPress: (text) => {
-                  vscode?.postMessage?.({
-                    type: 'templateDownload',
+                  vscBridge.callHandlerNoCallback('templateDownload', {
                     blockKey: currentSiderMenu,
                     pkgItem: item,
                     routerName: text,

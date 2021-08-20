@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import VSCBridge from '../third-party/vscode-bridge/bridge-vscode';
 import { downloadPackage } from './downloadUtil';
 import registerCommands from './registerCommand';
 import { openComponentDoc } from './webview/componentDoc';
@@ -41,26 +42,19 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
-    webviewView.webview.onDidReceiveMessage((data) => {
-      switch (data.type) {
-        case 'templateSelected': {
-          // vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`#${data.value}`));
-          openTemplateDoc(data.value.path);
-          break;
-        }
-        case 'templateDownload': {
-          const { blockKey, pkgItem, routerName } = data;
-          const targetDir = routerName;
-          downloadPackage(blockKey, pkgItem, targetDir).catch((e) => {
-            vscode.window.showErrorMessage(`下载失败`);
-          });
-          break;
-        }
-        case 'componentSelected': {
-					openComponentDoc(data.component);
-          break;
-        }
-      }
+    const bridge = new VSCBridge({ webview: webviewView.webview });
+    bridge.registerHandler('templateSelected', (data) => {
+      openTemplateDoc(data.tpl.path);
+    });
+    bridge.registerHandler('templateDownload', (data) => {
+      const { blockKey, pkgItem, routerName } = data;
+      const targetDir = routerName;
+      downloadPackage(blockKey, pkgItem, targetDir).catch((e) => {
+        vscode.window.showErrorMessage(`下载失败`);
+      });
+    });
+    bridge.registerHandler('componentSelected', (data) => {
+      openComponentDoc(data.component);
     });
   }
   private _getHtmlForWebview(webview: vscode.Webview) {

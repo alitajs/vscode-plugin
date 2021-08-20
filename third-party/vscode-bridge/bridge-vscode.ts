@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
-import {HandlerType, BridgeEvent, CALLBACK_HANDLER_NAME} from './shared';
+import { HandlerType, BridgeEvent, CALLBACK_HANDLER_NAME } from './shared';
 
 class Bridge {
   constructor({ webview }) {
     this.webview = webview;
+    this.listen();
   }
 
   uniqueId: number = 1;
@@ -32,7 +33,7 @@ class Bridge {
     this.webview.onDidReceiveMessage(
       ({ handlerName, data, callbackId }: BridgeEvent) => {
         if (handlerName === CALLBACK_HANDLER_NAME) {
-          this.handleReceiveWebviewCallback({callbackId, data});
+          this.handleReceiveWebviewCallback({ callbackId, data });
           return;
         }
         const fn = this.handlers.get(handlerName);
@@ -61,6 +62,13 @@ class Bridge {
         data,
         callbackId,
       });
+    });
+  }
+
+  callHandlerNoCallback(handlerName: string, data: any) {
+    this.sendMessageToWebview({
+      handlerName,
+      data,
     });
   }
 

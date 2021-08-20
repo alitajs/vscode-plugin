@@ -3,8 +3,8 @@ import { Layout, Menu } from 'antd';
 // @ts-ignore
 import { useRequest } from 'alita';
 import { getAntdMobilePlusRoutes } from '@/services/tplService';
-import vscode from '@/utils/vscode';
 import styles from './index.less';
+import vscBridge from '../../../third-party/vscode-bridge/bridge-webview';
 
 const ComponentView = () => {
   const siderMenus: any[] = [
@@ -40,10 +40,7 @@ const ComponentView = () => {
   };
 
   const handleComponentClick = (component: any) => {
-    vscode?.postMessage?.({
-      type: 'componentSelected',
-      component,
-    });
+    vscBridge.callHandlerNoCallback('componentSelected', { component });
   };
 
   return (
