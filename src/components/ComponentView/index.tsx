@@ -4,7 +4,7 @@ import { Layout, Menu } from 'antd';
 import { useRequest } from 'alita';
 import { getAntdMobilePlusRoutes } from '@/services/tplService';
 import styles from './index.less';
-import vscBridge from '../../../third-party/vscode-bridge/bridge-webview';
+import vscBridge from '@vscbridge/webview';
 
 const ComponentView = () => {
   const siderMenus: any[] = [

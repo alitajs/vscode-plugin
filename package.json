@@ -62,6 +62,8 @@
 		"webpack-cli": "^3.3.12"
 	},
 	"dependencies": {
+		"@vscbridge/ext": "^1.0.0",
+		"@vscbridge/webview": "^1.0.0",
 		"axios": "^0.21.1"
 	}
 }

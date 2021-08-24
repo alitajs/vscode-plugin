@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import VSCBridge from '../third-party/vscode-bridge/bridge-vscode';
+import VSCBridge from '@vscbridge/ext';
 import { downloadPackage } from './downloadUtil';
 import registerCommands from './registerCommand';
 import { openComponentDoc } from './webview/componentDoc';

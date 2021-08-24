@@ -6,7 +6,7 @@ import { useRequest } from 'alita';
 import TemplateList from '@/components/TemplateList';
 import { queryAlipayTpl } from '@/services/tplService';
 import { BLOCK_BUILD_IN_KEY, BLOCK_DATA } from '../../../shared/constants';
-import vscBridge from '../../../third-party/vscode-bridge/bridge-webview';
+import vscBridge from '@vscbridge/webview';
 
 const BLOCK_SIDER_MENU_DATA = BLOCK_DATA;
 

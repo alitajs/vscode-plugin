@@ -2404,6 +2404,25 @@
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
 
+"@vscbridge/ext@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@vscbridge/ext/-/ext-1.0.0.tgz#383d4a1af32103cb7dc248c315062c2765b38dfe"
+  integrity sha512-vJEGJTc6yZJejHnZPlgPiQQvJ0gBHzvQCNbdKR3CguY2Dj/IRUuOFcRvPPYfK3ePqG/fkm00ES9o4QsUY8jreA==
+  dependencies:
+    "@vscbridge/shared" "^1.0.0-alpha.3"
+
+"@vscbridge/shared@^1.0.0-alpha.3":
+  version "1.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@vscbridge/shared/-/shared-1.0.0-alpha.3.tgz#cbff6984e16b83fd4771efe7606b54c907ab6912"
+  integrity sha512-u438p0TzNUBp4wpORdfis0b+QrMtAiNhNu+F4VIUMfbckKNnoLgUpzkCHbrJdolRgLLzlahX3q942jPfUK6gnA==
+
+"@vscbridge/webview@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@vscbridge/webview/-/webview-1.0.0.tgz#fd89fb1ac6e9e86ed55bf711264793c746d061da"
+  integrity sha512-x20775Y2q1gkzwpqpTFR2XmNyYnOK4UfP4iKGydSNTovT+X9TKn251tODB6lzfvKoqxciYkIqDJ3/b/MAG1IHg==
+  dependencies:
+    "@vscbridge/shared" "^1.0.0-alpha.3"
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.9.0.tgz#bd850604b4042459a5a41cd7d338cbed695ed964"
