@@ -4,25 +4,22 @@ import { Modal } from 'antd-mobile';
 // @ts-ignore
 import { useRequest } from 'alita';
 import TemplateList from '@/components/TemplateList';
-import { queryAlipayTpl } from '@/services/tplService';
-import { BLOCK_BUILD_IN_KEY, BLOCK_DATA } from '../../../shared/constants';
+import { BLOCK_DATA } from '../../../shared/constants';
 import vscBridge from '@vscbridge/webview';
 
 const BLOCK_SIDER_MENU_DATA = BLOCK_DATA;
 
-const apiLookup = {
-  [BLOCK_BUILD_IN_KEY]: queryAlipayTpl,
-  kirin: () => new Promise((resolve) => resolve({})),
-  smartInstallAndMaintain: () => new Promise((resolve) => resolve({})),
-};
-
 const BlockView = () => {
   const siderMenus = BLOCK_SIDER_MENU_DATA;
   const [currentSiderMenu, setCurrentSideMenu] = useState(siderMenus[0].key);
+  console.log('render block view');
 
   const { data } = useRequest(
     () => {
-      return apiLookup[currentSiderMenu]?.();
+      return vscBridge.callHandler(
+        'getBlockTemplatesJSON',
+        siderMenus.find((item) => item.key === currentSiderMenu)
+      );
     },
     {
       refreshDeps: [currentSiderMenu],

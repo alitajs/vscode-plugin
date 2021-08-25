@@ -2,36 +2,35 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import VSCBridge from '@vscbridge/ext';
-import { downloadPackage } from './downloadUtil';
 import registerCommands from './registerCommand';
-import { openComponentDoc } from './webview/componentDoc';
-import { openTemplateDoc } from './webview/templateDoc';
+import { initRepos } from './git';
+import WebviewHandlers from './WebviewHandlers';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   registerCommands(context);
-
-  const provider = new TemplatesViewProvider(context.extensionUri);
-
-  context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      TemplatesViewProvider.viewType,
-      provider
-    )
-  );
+  initRepos(context).then(() => {
+    const provider = new TemplatesViewProvider(context.extensionUri, context);
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(
+        TemplatesViewProvider.viewType,
+        provider
+      )
+    );
+  });
 }
 
 class TemplatesViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'alita.templatesView';
-  // private _view?: vscode.WebviewView;
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  public webview?: vscode.WebviewView;
+  constructor(private readonly _extensionUri: vscode.Uri, private readonly _extContext: vscode.ExtensionContext) {}
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
     context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ) {
-    // this._view = webviewView;
+    this.webview = webviewView;
 
     webviewView.webview.options = {
       // Allow scripts in the webview
@@ -43,19 +42,8 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
     const bridge = new VSCBridge({ webview: webviewView.webview });
-    bridge.registerHandler('templateSelected', (data) => {
-      openTemplateDoc(data.tpl.path);
-    });
-    bridge.registerHandler('templateDownload', (data) => {
-      const { blockKey, pkgItem, routerName } = data;
-      const targetDir = routerName;
-      downloadPackage(blockKey, pkgItem, targetDir).catch((e) => {
-        vscode.window.showErrorMessage(`下载失败`);
-      });
-    });
-    bridge.registerHandler('componentSelected', (data) => {
-      openComponentDoc(data.component);
-    });
+    const webviewHandlers = new WebviewHandlers(bridge, this._extContext);
+    webviewHandlers.register();
   }
   private _getHtmlForWebview(webview: vscode.Webview) {
     // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
@@ -126,10 +114,10 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
 				<div id="root"></div>
 		
 				<script>
-					window.console.log = () => {};
-					window.console.info = () => {};
-					window.console.warn = () => {};
-					window.console.error = () => {};
+					// window.console.log = () => {};
+					// window.console.info = () => {};
+					// window.console.warn = () => {};
+					// window.console.error = () => {};
 				</script>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
