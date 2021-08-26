@@ -24,12 +24,13 @@ export default class WebviewHandlers {
       openTemplateDoc(data.tpl.path);
     });
     this.bridge.registerHandler('templateDownload', (data) => {
-      const { blockKey, pkgItem, routerName } = data;
-      const targetDir = routerName;
       this.downloadBlock(data);
     });
     this.bridge.registerHandler('componentSelected', (data) => {
       openComponentDoc(data.component);
+    });
+    this.bridge.registerHandler('getBlockSnapshotUriPrefix', (blockConfig, callback) => {
+      callback(this.bridge.webview.asWebviewUri(vscode.Uri.file(blockRepoPath(blockConfig))).toString());
     });
   }
 

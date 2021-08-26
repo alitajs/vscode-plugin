@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import VSCBridge from '@vscbridge/ext';
 import registerCommands from './registerCommand';
-import { initRepos } from './git';
+import { initRepos, reposPath } from './git';
 import WebviewHandlers from './WebviewHandlers';
 
 // this method is called when your extension is activated
@@ -36,7 +36,7 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
       // Allow scripts in the webview
       enableScripts: true,
 
-      localResourceRoots: [this._extensionUri],
+      localResourceRoots: [this._extensionUri, vscode.Uri.file(reposPath())],
     };
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);

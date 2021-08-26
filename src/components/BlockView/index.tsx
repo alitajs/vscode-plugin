@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
 import { Modal } from 'antd-mobile';
 // @ts-ignore
@@ -13,6 +13,7 @@ const BlockView = () => {
   const siderMenus = BLOCK_SIDER_MENU_DATA;
   const [currentSiderMenu, setCurrentSideMenu] = useState(siderMenus[0].key);
   console.log('render block view');
+  const [snapshotUriPrefix, setSnapshotUriPrefix] = useState('');
 
   const { data } = useRequest(
     () => {
@@ -25,6 +26,15 @@ const BlockView = () => {
       refreshDeps: [currentSiderMenu],
     }
   );
+
+  useEffect(() => {
+    vscBridge
+      .callHandler(
+        'getBlockSnapshotUriPrefix',
+        siderMenus.find((item) => item.key === currentSiderMenu)
+      )
+      .then((uri) => setSnapshotUriPrefix(uri as string));
+  }, [currentSiderMenu]);
 
   const handleSiderMenuClick = (info: any) => {
     setCurrentSideMenu(info.key);
@@ -79,6 +89,7 @@ const BlockView = () => {
       <Layout>
         <Layout.Content>
           <TemplateList
+            snapshotUriPrefix={snapshotUriPrefix}
             data={data}
             onItemClick={onItemCLick}
             onDownloadClick={onDownloadCLick}
