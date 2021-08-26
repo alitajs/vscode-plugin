@@ -2,7 +2,7 @@ import simpleGit, {SimpleGit} from 'simple-git';
 import path from 'path';
 import fs from 'fs';
 import * as vscode from 'vscode';
-import { BLOCK_DATA } from '../../shared/constants';
+import * as setting from '../setting';
 
 
 const git: SimpleGit = simpleGit();
@@ -23,7 +23,7 @@ export async function initRepos(context: vscode.ExtensionContext) {
   };
 
   // 读取区块配置
-  const blockData = BLOCK_DATA;
+  const blockData = setting.block();
 
   // 仓库下载状态文件
   // path.join(context.globalStorageUri.fsPath, 'repos.json');

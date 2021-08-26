@@ -5,7 +5,7 @@ import path from 'path';
 import { blockRepoPath } from './git';
 import { openComponentDoc } from './webview/componentDoc';
 import { openTemplateDoc } from './webview/templateDoc';
-import { BLOCK_DATA } from '../shared/constants';
+import * as setting from './setting';
 
 export default class WebviewHandlers {
   constructor(bridge: Bridge, context: vscode.ExtensionContext) {
@@ -16,6 +16,9 @@ export default class WebviewHandlers {
   private context: vscode.ExtensionContext;
 
   register() {
+    this.bridge.registerHandler('getBlockConfig', (_, callback) => {
+      callback(setting.block());
+    });
     this.bridge.registerHandler(
       'getBlockTemplatesJSON',
       this.getBlockTemplatesJSON
@@ -59,7 +62,7 @@ export default class WebviewHandlers {
       fs.mkdirpSync(targetDir);
     }
     const repoPath = blockRepoPath(
-      BLOCK_DATA.find((item) => item.key === blockKey)
+      setting.block().find((item) => item.key === blockKey)
     );
     const srcDir = path.join(repoPath, pkgItem.path, 'src/pages');
     fs.copy(srcDir, targetDir)

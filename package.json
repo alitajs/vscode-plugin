@@ -38,6 +38,25 @@
 					"name": "Alita Templates"
 				}
 			]
+		},
+		"configuration":{
+			"title": "WhaleCloudKit",
+			"properties": {
+				"whaleCloudKit.block": {
+					"type": "array",
+					"default": [
+						{
+							"title": "支付宝",
+							"key": "alipay",
+							"repoType": "github",
+							"repoOrg": "alitajs",
+							"repoName": "templates",
+							"repoURL": "https://github.com/alitajs/templates.git"
+						}
+					],
+					"markdownDescription": "区块数据，具体配置可以看 [README.md](https://github.com/alitajs/vscode-plugin#block-config)"
+				}
+			}
 		}
 	},
 	"scripts": {

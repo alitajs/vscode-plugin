@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Empty } from 'antd';
 import { Modal } from 'antd-mobile';
 // @ts-ignore
 import { useRequest } from 'alita';
 import TemplateList from '@/components/TemplateList';
-import { BLOCK_DATA } from '../../../shared/constants';
+import { BlockConfig } from '../../../shared/typings';
 import vscBridge from '@vscbridge/webview';
 
-const BLOCK_SIDER_MENU_DATA = BLOCK_DATA;
-
 const BlockView = () => {
-  const siderMenus = BLOCK_SIDER_MENU_DATA;
-  const [currentSiderMenu, setCurrentSideMenu] = useState(siderMenus[0].key);
-  console.log('render block view');
+  const [siderMenus, setSiderMenus] = useState<Array<BlockConfig>>([]);
+  const [currentSiderMenu, setCurrentSideMenu] = useState(siderMenus[0]?.key);
   const [snapshotUriPrefix, setSnapshotUriPrefix] = useState('');
 
   const { data } = useRequest(
@@ -24,10 +21,21 @@ const BlockView = () => {
     },
     {
       refreshDeps: [currentSiderMenu],
+      ready: !!currentSiderMenu
     }
   );
 
   useEffect(() => {
+    vscBridge.callHandler('getBlockConfig', {}).then((res: any) => {
+      setSiderMenus(res);
+      setCurrentSideMenu(res[0]?.key);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!currentSiderMenu) {
+      return;
+    }
     vscBridge
       .callHandler(
         'getBlockSnapshotUriPrefix',
@@ -72,6 +80,10 @@ const BlockView = () => {
       },
     ]);
   };
+
+  if (!siderMenus || siderMenus.length === 0) {
+    return <Empty>请配置区块数据</Empty>;
+  }
 
   return (
     <Layout>
