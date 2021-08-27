@@ -4,6 +4,7 @@ import { Layout, Menu } from 'antd';
 import { useRequest } from 'alita';
 import BlockView from '@/components/BlockView';
 import ComponentView from '@/components/ComponentView';
+import styles from './index.less';
 
 const MENU_DATA = [
   {
@@ -26,7 +27,7 @@ const IndexPage: FC<PageProps> = () => {
   };
 
   return (
-    <Layout>
+    <Layout className={styles.page}>
       <Layout.Header style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Menu
           mode="horizontal"

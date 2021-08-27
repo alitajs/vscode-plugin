@@ -25,8 +25,8 @@
 			"activitybar": [
 				{
 					"id": "alitajs-plugin",
-					"title": "AlitaPlugin",
-					"icon": "images/alita.png"
+					"title": "组件资产",
+					"icon": "images/alita.svg"
 				}
 			]
 		},
