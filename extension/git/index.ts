@@ -9,7 +9,7 @@ const git: SimpleGit = simpleGit();
 
 let _reposPath: string;
 
-const REPOS_JSON = 'repos_json';
+// const REPOS_JSON = 'repos_json';
 
 /**
  * 初始化仓库
@@ -24,6 +24,10 @@ export async function initRepos(context: vscode.ExtensionContext) {
 
   // 读取区块配置
   const blockData = setting.block();
+
+  if (!Array.isArray(blockData)) {
+    return;
+  }
 
   // 仓库下载状态文件
   // path.join(context.globalStorageUri.fsPath, 'repos.json');

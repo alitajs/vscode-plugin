@@ -10,10 +10,10 @@ import * as setting from './setting';
 export default class WebviewHandlers {
   constructor(bridge: Bridge, context: vscode.ExtensionContext) {
     this.bridge = bridge;
-    this.context = context;
+    // this.context = context;
   }
   private bridge: Bridge;
-  private context: vscode.ExtensionContext;
+  // private context: vscode.ExtensionContext;
 
   register() {
     this.bridge.registerHandler('getBlockConfig', (_, callback) => {
@@ -32,9 +32,16 @@ export default class WebviewHandlers {
     this.bridge.registerHandler('componentSelected', (data) => {
       openComponentDoc(data.component);
     });
-    this.bridge.registerHandler('getBlockSnapshotUriPrefix', (blockConfig, callback) => {
-      callback(this.bridge.webview.asWebviewUri(vscode.Uri.file(blockRepoPath(blockConfig))).toString());
-    });
+    this.bridge.registerHandler(
+      'getBlockSnapshotUriPrefix',
+      (blockConfig, callback) => {
+        callback(
+          this.bridge.webview
+            .asWebviewUri(vscode.Uri.file(blockRepoPath(blockConfig)))
+            .toString()
+        );
+      }
+    );
   }
 
   /**
@@ -42,7 +49,7 @@ export default class WebviewHandlers {
    * @param data 区块配置
    * @param callback 回调
    */
-  getBlockTemplatesJSON(data, callback) {
+  getBlockTemplatesJSON(data: any, callback: Function) {
     // 获取仓库路径
     const repoPath = blockRepoPath(data);
     const resultStr = fs.readFileSync(
@@ -52,8 +59,12 @@ export default class WebviewHandlers {
     callback(JSON.parse(resultStr));
   }
 
-  downloadBlock(data) {
+  downloadBlock(data: any) {
     const { blockKey, pkgItem, routerName } = data;
+    if (!vscode.workspace.workspaceFolders) {
+      vscode.window.showInformationMessage('请打开项目目录');
+      return;
+    }
     const targetDir = path.join(
       vscode.workspace.workspaceFolders[0].uri.path,
       routerName
@@ -61,9 +72,12 @@ export default class WebviewHandlers {
     if (!fs.existsSync(targetDir)) {
       fs.mkdirpSync(targetDir);
     }
-    const repoPath = blockRepoPath(
-      setting.block().find((item) => item.key === blockKey)
-    );
+    const targetBlock = setting.block().find((item) => item.key === blockKey);
+    if (!targetBlock) {
+      vscode.window.showErrorMessage('找不到对应区块配置');
+      return;
+    }
+    const repoPath = blockRepoPath(targetBlock);
     const srcDir = path.join(repoPath, pkgItem.path, 'src/pages');
     fs.copy(srcDir, targetDir)
       .then(() => {
