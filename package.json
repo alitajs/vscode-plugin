@@ -36,9 +36,20 @@
 					"type": "webview",
 					"id": "alita.templatesView",
 					"name": "Alita Templates"
+				},
+				{
+					"type": "tree",
+					"id": "alita.settingView",
+					"name": "设置"
 				}
 			]
 		},
+		"viewsWelcome": [
+			{
+				"view": "alita.settingView",
+				"contents": "[设置](command:alita.openConfigPage)"
+			}
+		],
 		"configuration":{
 			"title": "WhaleCloudKit",
 			"properties": {

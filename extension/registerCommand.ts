@@ -7,6 +7,14 @@ function registerCommands(context: vscode.ExtensionContext) {
       openTemplateDoc(templateName);
     })
   );
+  context.subscriptions.push(
+    vscode.commands.registerCommand('alita.openConfigPage', () => {
+      vscode.commands.executeCommand(
+        'workbench.action.openSettings',
+        '@id:whaleCloudKit.block'
+      );
+    })
+  );
 }
 
 export default registerCommands;

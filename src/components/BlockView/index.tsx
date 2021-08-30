@@ -21,7 +21,7 @@ const BlockView = () => {
     },
     {
       refreshDeps: [currentSiderMenu],
-      ready: !!currentSiderMenu
+      ready: !!currentSiderMenu,
     }
   );
 
