@@ -24,7 +24,7 @@ export default class WebviewHandlers {
       this.getBlockTemplatesJSON
     );
     this.bridge.registerHandler('templateSelected', (data) => {
-      openTemplateDoc(data.tpl.path);
+      openTemplateDoc(data.tpl);
     });
     this.bridge.registerHandler('templateDownload', (data) => {
       this.downloadBlock(data);
