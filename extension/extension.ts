@@ -39,11 +39,11 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri, vscode.Uri.file(reposPath())],
     };
 
-    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
-
     const bridge = new VSCBridge({ webview: webviewView.webview });
     const webviewHandlers = new WebviewHandlers(bridge, this._extContext);
     webviewHandlers.register();
+
+		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
   }
   private _getHtmlForWebview(webview: vscode.Webview) {
     // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.

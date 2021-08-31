@@ -15,7 +15,7 @@ export default class WebviewHandlers {
   private bridge: Bridge;
   // private context: vscode.ExtensionContext;
 
-  register() {
+  register = () => {
     this.bridge.registerHandler('getBlockConfig', (_, callback) => {
       callback(setting.block());
     });
@@ -42,22 +42,47 @@ export default class WebviewHandlers {
         );
       }
     );
-  }
+  };
 
   /**
    * 获取区块 templates.json 文件
    * @param data 区块配置
    * @param callback 回调
    */
-  getBlockTemplatesJSON(data: any, callback: Function) {
+  getBlockTemplatesJSON = (data: any, callback: Function) => {
     // 获取仓库路径
     const repoPath = blockRepoPath(data);
     const resultStr = fs.readFileSync(
       path.join(repoPath, 'templates.json'),
       'utf-8'
     );
-    callback(JSON.parse(resultStr));
-  }
+    const result = JSON.parse(resultStr);
+    const tplData = result.data || {};
+    // 设置截图路径
+    const traversalTplArray = (tpls: any[]) => {
+      tpls.forEach((item) => {
+        item.snapshot = this.bridge.webview
+          .asWebviewUri(
+            vscode.Uri.file(
+              path.join(blockRepoPath(data), item.path, 'snapshot.png')
+            )
+          )
+          .toString();
+      });
+    };
+    // 给每个区块加上本地截图路径
+    const processTplObject = (tplObject: any) => {
+      Object.keys(tplObject).forEach((key: string) => {
+        if (Array.isArray(tplObject[key])) {
+          traversalTplArray(tplObject[key]);
+        } else if (typeof tplObject[key] === 'object') {
+          processTplObject(tplObject[key]);
+        }
+      });
+    };
+    processTplObject(tplData);
+    callback(result);
+  };
 
   downloadBlock(data: any) {
     const { blockKey, pkgItem, routerName } = data;

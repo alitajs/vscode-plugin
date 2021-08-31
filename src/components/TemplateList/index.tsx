@@ -3,14 +3,12 @@ import { Collapse } from 'antd';
 import styles from './index.less';
 
 interface PageProps {
-  snapshotUriPrefix: string;
   data: any;
   onItemClick?: (tpl: any) => void;
   onDownloadClick?: (tpl: any) => void;
 }
 
 const TemplateList: FC<PageProps> = ({
-  snapshotUriPrefix = '',
   data = {},
   onItemClick,
   onDownloadClick,
@@ -48,7 +46,7 @@ const TemplateList: FC<PageProps> = ({
                                 className={styles.imgPanel}
                                 onClick={() => onItemClick?.(tpl)}
                               >
-                                <img src={`${snapshotUriPrefix}/${tpl.path}/snapshot.png`} />
+                                <img src={tpl.snapshot} />
                                 <button
                                   className={styles.downloadBtn}
                                   onClick={() => onDownloadClick?.(tpl)}
