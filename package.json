@@ -4,7 +4,7 @@
 	"icon": "images/alita.png",
 	"description": "Business focused web full process solution.",
 	"publisher": "alita",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"engines": {
 		"vscode": "^1.51.0"
 	},

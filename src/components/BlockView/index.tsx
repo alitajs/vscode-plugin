@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Empty, Input } from 'antd';
+import { Layout, Menu, Empty } from 'antd';
 import { Modal } from 'antd-mobile';
 // @ts-ignore
 import { useRequest } from 'alita';

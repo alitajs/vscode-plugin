@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import vscBridge from '@vscbridge/webview';
 import { BlockConfig } from 'shared/typings';
 
