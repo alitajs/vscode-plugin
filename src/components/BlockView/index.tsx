@@ -8,6 +8,7 @@ import { BlockConfig } from '../../../shared/typings';
 import vscBridge from '@vscbridge/webview';
 import useSearch from './useSearch';
 import SearchResultView from './SearchResultView';
+import SearchView from '../SearchView';
 
 const BlockView = () => {
   const [siderMenus, setSiderMenus] = useState<Array<BlockConfig>>([]);
@@ -80,14 +81,7 @@ const BlockView = () => {
   return (
     <Layout>
       <Layout.Header style={{ background: 'white' }}>
-        <Input.Search
-          style={{ width: '100%', verticalAlign: 'middle' }}
-          size="large"
-          placeholder="请输入"
-          enterButton
-          allowClear
-          onSearch={handleSearch}
-        />
+        <SearchView handleSearch={handleSearch} />
       </Layout.Header>
       {isSearch ? (
         <SearchResultView

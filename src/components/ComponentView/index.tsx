@@ -5,6 +5,9 @@ import { useRequest } from 'alita';
 import { getAntdMobilePlusRoutes } from '@/services/tplService';
 import styles from './index.less';
 import vscBridge from '@vscbridge/webview';
+import SearchView from '../SearchView';
+import useSearch from './useSearch';
+import SearchResultView from './SearchResultView';
 
 const ComponentView = () => {
   const siderMenus: any[] = [
@@ -23,6 +26,7 @@ const ComponentView = () => {
   const { data: routesData } = useRequest(getAntdMobilePlusRoutes, {
     formatResult: (result: any) => result,
   });
+  const { isSearch, handleSearch, searchResult } = useSearch({ routesData: routesData?.routes });
 
   const data = useMemo(() => {
     const routes = routesData?.routes;
@@ -45,46 +49,60 @@ const ComponentView = () => {
 
   return (
     <Layout>
-      <Layout.Sider width={112}>
-        <Menu
-          mode="vertical"
-          selectedKeys={[currentSiderMenu]}
-          onClick={handleSiderMenuClick}
-        >
-          {siderMenus.map((menu: any) => {
-            return <Menu.Item key={menu.key}>{menu.title}</Menu.Item>;
-          })}
-        </Menu>
-      </Layout.Sider>
-      <Layout>
-        <Layout.Content className={styles.componentsList}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyItems: 'start',
-              alignItems: 'center',
-            }}
-          >
-            {data.map((item) => {
-              return (
-                <div className={styles.flexItem} key={item.path}>
-                  <p className={styles.description}>{item.title}</p>
-                  <div
-                    className={styles.imgPanel}
-                    onClick={() => handleComponentClick(item)}
-                  >
-                    <img
-                      src={`https://raw.githubusercontent.com/alitajs/antd-mobile-plus/master/screenshot/${item.meta?.componentName?.toLocaleLowerCase?.()}-demo.png?raw=true`}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      <Layout.Header style={{ background: 'white' }}>
+        <SearchView handleSearch={handleSearch} />
+      </Layout.Header>
+      {isSearch ? (
+        <Layout.Content>
+          <SearchResultView
+            data={searchResult}
+            onComponentClick={handleComponentClick}
+          />
         </Layout.Content>
-      </Layout>
+      ) : (
+        <Layout>
+          <Layout.Sider width={112}>
+            <Menu
+              mode="vertical"
+              selectedKeys={[currentSiderMenu]}
+              onClick={handleSiderMenuClick}
+            >
+              {siderMenus.map((menu: any) => {
+                return <Menu.Item key={menu.key}>{menu.title}</Menu.Item>;
+              })}
+            </Menu>
+          </Layout.Sider>
+          <Layout>
+            <Layout.Content className={styles.componentsList}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyItems: 'start',
+                  alignItems: 'center',
+                }}
+              >
+                {data.map((item) => {
+                  return (
+                    <div className={styles.flexItem} key={item.path}>
+                      <p className={styles.description}>{item.title}</p>
+                      <div
+                        className={styles.imgPanel}
+                        onClick={() => handleComponentClick(item)}
+                      >
+                        <img
+                          src={`https://raw.githubusercontent.com/alitajs/antd-mobile-plus/master/screenshot/${item.meta?.componentName?.toLocaleLowerCase?.()}-demo.png?raw=true`}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Layout.Content>
+          </Layout>
+        </Layout>
+      )}
     </Layout>
   );
 };
