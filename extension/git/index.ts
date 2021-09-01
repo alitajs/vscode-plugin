@@ -1,9 +1,8 @@
-import simpleGit, {SimpleGit} from 'simple-git';
+import simpleGit, { SimpleGit } from 'simple-git';
 import path from 'path';
 import fs from 'fs';
 import * as vscode from 'vscode';
 import * as setting from '../setting';
-
 
 const git: SimpleGit = simpleGit();
 
@@ -17,10 +16,11 @@ let _reposPath: string;
  */
 export async function initRepos(context: vscode.ExtensionContext) {
   // 在 globalState 目录创建 repos 目录
-  _reposPath = path.join(context.globalStorageUri.fsPath, 'repos');
+  _reposPath = path.join(context.globalStorageUri.path, 'repos');
   if (!fs.existsSync(_reposPath)) {
-    fs.mkdirSync(_reposPath);
-  };
+    // recursive 选项创建不存在的父目录
+    fs.mkdirSync(_reposPath, { recursive: true });
+  }
 
   // 读取区块配置
   const blockData = setting.block();
@@ -31,15 +31,18 @@ export async function initRepos(context: vscode.ExtensionContext) {
 
   // 仓库下载状态文件
   // path.join(context.globalStorageUri.fsPath, 'repos.json');
-  
 
   // git clone 仓库
   for (let i = 0; i < blockData.length; i += 1) {
     const blockConfig = blockData[i];
     try {
-      await cloneRepo(blockConfig.repoURL, path.join(_reposPath, blockConfig.key));
+      await cloneRepo(
+        blockConfig.repoURL,
+        path.join(_reposPath, blockConfig.key)
+      );
     } catch (error) {
-      console.log(`git clone repo fail: ${blockConfig.repoURL}`);
+      vscode.window.showErrorMessage(error.msg);
+      console.log(`git clone repo fail: ${blockConfig.repoURL}. reason: ${error}`);
     }
   }
 }
@@ -48,7 +51,7 @@ export async function initRepos(context: vscode.ExtensionContext) {
  * git clone 仓库，如果本地已经存在，则 pull 仓库
  * @param url 仓库地址
  * @param localPath 本地路径
- * @returns 
+ * @returns
  */
 export async function cloneRepo(url: string, localPath: string) {
   // 如果目录已经存在 则 pull 仓库
