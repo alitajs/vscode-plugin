@@ -10,21 +10,35 @@ import WebviewHandlers from './WebviewHandlers';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   registerCommands(context);
-  initRepos(context).then(() => {
-    const provider = new TemplatesViewProvider(context.extensionUri, context);
-    context.subscriptions.push(
-      vscode.window.registerWebviewViewProvider(
-        TemplatesViewProvider.viewType,
-        provider
-      )
-    );
-  });
+  vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: '下载仓库中',
+    },
+    () => {
+      return initRepos(context).then(() => {
+        const provider = new TemplatesViewProvider(
+          context.extensionUri,
+          context
+        );
+        context.subscriptions.push(
+          vscode.window.registerWebviewViewProvider(
+            TemplatesViewProvider.viewType,
+            provider
+          )
+        );
+      });
+    }
+  );
 }
 
 class TemplatesViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'alita.templatesView';
   public webview?: vscode.WebviewView;
-  constructor(private readonly _extensionUri: vscode.Uri, private readonly _extContext: vscode.ExtensionContext) {}
+  constructor(
+    private readonly _extensionUri: vscode.Uri,
+    private readonly _extContext: vscode.ExtensionContext
+  ) {}
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
     context: vscode.WebviewViewResolveContext,
@@ -43,7 +57,7 @@ class TemplatesViewProvider implements vscode.WebviewViewProvider {
     const webviewHandlers = new WebviewHandlers(bridge, this._extContext);
     webviewHandlers.register();
 
-		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
   }
   private _getHtmlForWebview(webview: vscode.Webview) {
     // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.

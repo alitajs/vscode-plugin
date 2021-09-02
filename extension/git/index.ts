@@ -41,7 +41,7 @@ export async function initRepos(context: vscode.ExtensionContext) {
         path.join(_reposPath, blockConfig.key)
       );
     } catch (error) {
-      vscode.window.showErrorMessage(error.msg);
+      vscode.window.showErrorMessage(`${error}`);
       console.log(`git clone repo fail: ${blockConfig.repoURL}. reason: ${error}`);
     }
   }
